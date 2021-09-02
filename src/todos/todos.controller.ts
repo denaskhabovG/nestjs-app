@@ -31,6 +31,6 @@ export class TodosController {
 
   @Patch()
   changeTodo(@Body() updateTodo: UpdateTodoDto, @Param('id') id: string) {
-    return 'Change ' + id;
+    return this.todoService.update(id, updateTodo);
   }
 }
