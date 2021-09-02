@@ -1,8 +1,6 @@
 import { Module } from '@nestjs/common';
-import { AppController } from './app.controller';
-import { AppService } from './app.service';
-import { TodosController } from './todos/todos.controller';
 import { SequelizeModule } from '@nestjs/sequelize';
+import { Todo } from './todos/models/todo.model';
 
 @Module({
   imports: [
@@ -13,10 +11,9 @@ import { SequelizeModule } from '@nestjs/sequelize';
       username: 'postgres',
       password: 'postgres',
       database: 'postgres',
-      models: [],
+      models: [Todo],
+      autoLoadModels: true
     }),
   ],
-  controllers: [AppController, TodosController],
-  providers: [AppService],
 })
 export class AppModule {}
