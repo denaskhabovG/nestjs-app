@@ -1,19 +1,24 @@
 import { Module } from '@nestjs/common';
 import { SequelizeModule } from '@nestjs/sequelize';
-import { Todo } from './todos/models/todo.model';
+import { ConfigModule } from '@nestjs/config';
+import { databaseConfig } from './config/configuration';
+import { SequelizeConfigService } from './config/SequelizeConfigService';
+
+import { TodoModule } from './todos/todo.module';
+import { UserSignatureModule } from './userSignature/userSignature.module';
 
 @Module({
   imports: [
-    SequelizeModule.forRoot({
-      dialect: 'postgres',
-      host: 'localhost',
-      port: 5432,
-      username: 'postgres',
-      password: 'postgres',
-      database: 'postgres',
-      models: [Todo],
-      autoLoadModels: true
+    SequelizeModule.forRootAsync({
+      imports: [ConfigModule],
+      useClass: SequelizeConfigService,
     }),
+    ConfigModule.forRoot({
+      load: [databaseConfig],
+    }),
+    TodoModule,
+    UserSignatureModule
   ],
 })
+
 export class AppModule {}

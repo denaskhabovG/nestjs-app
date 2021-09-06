@@ -5,6 +5,6 @@ export class Todo extends Model {
   @Column
   title: string;
 
-  @Column
+  @Column({ defaultValue: false })
   done: boolean;
 }
