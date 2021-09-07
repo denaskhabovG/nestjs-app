@@ -2,7 +2,7 @@ import { Injectable } from '@nestjs/common';
 import { InjectModel } from '@nestjs/sequelize';
 import { Todo } from './models/todo.model';
 import { CreateTodoDto } from './dto/create-todo.dto';
-import { UpdateTodoDto } from './dto/update-todo.dto';
+import { ChangeTodoDto } from './dto/change-todo.dto';
 
 @Injectable()
 export class TodoService {
@@ -38,7 +38,7 @@ export class TodoService {
     await todo.destroy();
   }
 
-  update(id: string, todoDto: UpdateTodoDto) {
+  update(id: string, todoDto: ChangeTodoDto) {
     return this.todoModel.update({ ...todoDto }, {
       where: {
         id

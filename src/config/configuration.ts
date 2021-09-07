@@ -1,5 +1,6 @@
 import { registerAs } from '@nestjs/config';
 import { Dialect } from 'sequelize/types';
+import { EnumConfig } from './enumConfig/enumConfig';
 
 export interface IDatabaseConfig {
   pg: {
@@ -13,7 +14,7 @@ export interface IDatabaseConfig {
   };
 }
 
-export const databaseConfig = registerAs('database', (): IDatabaseConfig => ({
+export const databaseConfig = registerAs(EnumConfig.DATABASE, (): IDatabaseConfig => ({
   pg: {
     dialect: <Dialect>process.env.SQL_DIALECT || 'postgres',
     logging: process.env.SQL_LOGGING === 'true' || true,

@@ -1,10 +1,10 @@
 import { Injectable } from '@nestjs/common';
 import { InjectModel } from '@nestjs/sequelize';
-import * as CryptoJS from 'crypto-js';
 import { UserSignature } from './models/userSignature.model';
 import { SignInDto } from './dto/create-signature.dto';
 import * as signatureJson from './signatures/signature.json';
 import { Session } from '../session/models/session.model';
+import { EncryptSignatureService } from './encryptSignature.service';
 
 @Injectable()
 export class UserSignatureService {
@@ -14,20 +14,10 @@ export class UserSignatureService {
   ) {
   }
 
-  encrypt(message = '', key = '') {
-    const msg = CryptoJS.AES.encrypt(message, key);
-    return msg.toString();
-  }
-
-  decrypt(message = '', key = '') {
-    const code = CryptoJS.AES.decrypt(message, key);
-    return code.toString(CryptoJS.enc.Utf8);
-  }
-
   async getSignature(): Promise<object> {
     const signature = new UserSignature();
     const stringifiedJson = JSON.stringify(signatureJson);
-    signature.text = this.encrypt(stringifiedJson, 'secret');
+    signature.text = EncryptSignatureService.encrypt(stringifiedJson, 'secret');
     await signature.save();
 
     return signatureJson;
@@ -42,10 +32,10 @@ export class UserSignatureService {
         },
       });
 
-      const decryptedSignature1 = this.decrypt(signature1, 'secret');
-      const decryptedLastSignature = this.decrypt(signature2.text, 'secret');
+      const decryptedSignature1 = EncryptSignatureService.decrypt(signature1, 'secret');
+      const decryptedSignature2 = EncryptSignatureService.decrypt(signature2.text, 'secret');
 
-      if (decryptedSignature1 === decryptedLastSignature) {
+      if (decryptedSignature1 === decryptedSignature2) {
         const session = new Session();
         session.text = signature1;
         return session.save();
@@ -53,15 +43,5 @@ export class UserSignatureService {
     } catch (e) {
       console.log(e);
     }
-  }
-
-  async remove(id: number): Promise<void> {
-    const signature = await this.UserSignatureModel.findOne({
-      where: {
-        id,
-      },
-    });
-
-    await signature.destroy();
   }
 }

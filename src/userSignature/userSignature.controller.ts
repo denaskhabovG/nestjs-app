@@ -15,9 +15,4 @@ export class UserSignatureController {
   signIn(@Body() signature: SignInDto) {
     return this.userSignatureService.signIn(signature);
   }
-
-  @Delete(':id')
-  deleteTodo(@Param('id') id: number) {
-    return this.userSignatureService.remove(id);
-  }
 }

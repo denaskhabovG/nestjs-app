@@ -1,7 +1,7 @@
 import { Module } from '@nestjs/common';
 import { SequelizeModule } from '@nestjs/sequelize';
-import { Session } from './models/session.model';
 import { ConfigModule } from '@nestjs/config';
+import { Session } from './models/session.model';
 
 @Module({
   imports: [
