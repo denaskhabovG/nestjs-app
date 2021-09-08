@@ -6,7 +6,7 @@ import { pgConfig } from './postgres.config';
 export interface IDatabaseConfig {
   pg: {
     dialect: Dialect,
-    logging: boolean | string,
+    logging: boolean,
     host: string,
     port: number,
     username: string,

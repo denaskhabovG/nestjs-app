@@ -75,8 +75,12 @@ describe('TodosController', () => {
       .patch(`/todos/${todo.id}`)
       .send(editTodo);
 
-    expect(response.body.title).toBe(editTodo.title);
-    expect(response.body.done).toBe(editTodo.done);
+    console.log(response.body);
+
+    response.body[1].forEach(todo => {
+      expect(todo.title).toEqual(editTodo.title);
+      expect(todo.done).toEqual(editTodo.done);
+    });
   });
 
   it('should delete todo', async () => {

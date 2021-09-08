@@ -7,7 +7,7 @@ export const pgConfig = registerAs(EnumConfig.DATABASE, () => {
 
   return {
     dialect: <Dialect>process.env.SQL_DIALECT || 'postgres',
-    logging: process.env.SQL_LOGGING || true,
+    logging: process.env.SQL_LOGGING === 'true' ? true : false,
     host: isTestEnv
       ? process.env.DATABASE_TEST_HOST
       : process.env.DATABASE_HOST,
