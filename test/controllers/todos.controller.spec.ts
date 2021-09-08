@@ -75,8 +75,6 @@ describe('TodosController', () => {
       .patch(`/todos/${todo.id}`)
       .send(editTodo);
 
-    console.log(response.body);
-
     response.body[1].forEach(todo => {
       expect(todo.title).toEqual(editTodo.title);
       expect(todo.done).toEqual(editTodo.done);
