@@ -9,15 +9,9 @@ import { databaseConfig } from '../../src/config/configuration';
 import { UserSignatureModule } from '../../src/userSignature/userSignature.module';
 import { UserSignature } from '../../src/userSignature/models/userSignature.model';
 import * as signatureJson from '../../src/userSignature/signatures/signature.json';
-import { EncryptSignatureService } from '../../src/userSignature/encryptSignature.service';
-
-const mockedSignature = {
-  text: 'signature',
-};
 
 describe('UserSignatureController', () => {
   let app: INestApplication;
-  let session: string;
 
   beforeEach(async () => {
     const module: TestingModule = await Test.createTestingModule({
@@ -35,15 +29,6 @@ describe('UserSignatureController', () => {
 
     app = module.createNestApplication();
     await app.init();
-  });
-
-  beforeEach(async () => {
-    const signature = new UserSignature();
-    const stringifiedJson = JSON.stringify(signatureJson);
-
-    signature.text = EncryptSignatureService.encrypt(stringifiedJson, 'secret');
-
-    await signature.save();
   });
 
   afterEach(async () => {
@@ -65,9 +50,6 @@ describe('UserSignatureController', () => {
       .post('/signature')
       .send(signatureJson)
       .set('Set-Cookie', `session-id=${response1.body.text}`);
-
-    console.log(response2.body.text);
-    console.log(response1.body.text);
 
     expect(response2.body.text).toEqual(response1.body.text);
   });

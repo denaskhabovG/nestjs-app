@@ -1,7 +1,7 @@
 import { Injectable } from '@nestjs/common';
 import { InjectModel } from '@nestjs/sequelize';
 import { UserSignature } from './models/userSignature.model';
-import { SignInDto } from './dto/create-signature.dto';
+import { SignatureDto } from './dto/create-signature.dto';
 import * as signatureJson from './signatures/signature.json';
 import { Session } from '../session/models/session.model';
 import { EncryptSignatureService } from './encryptSignature.service';
@@ -23,7 +23,7 @@ export class UserSignatureService {
     return signatureJson;
   }
 
-  async signIn(body: SignInDto): Promise<UserSignature>  {
+  async signIn(body: SignatureDto): Promise<UserSignature>  {
     try {
       const signature1 = body.text;
       const signature2 = await this.UserSignatureModel.findOne({
