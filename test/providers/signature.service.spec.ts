@@ -1,25 +1,20 @@
-import { Test, TestingModule } from '@nestjs/testing';
-import * as request from 'supertest';
 import { INestApplication } from '@nestjs/common';
+import { Test, TestingModule } from '@nestjs/testing';
 import { SequelizeModule } from '@nestjs/sequelize';
 import { ConfigModule } from '@nestjs/config';
-import { UserSignatureController } from '../../src/userSignature/userSignature.controller';
 import { SequelizeConfigService } from '../../src/config/sequelizeConfig.service';
 import { databaseConfig } from '../../src/config/configuration';
 import { UserSignatureModule } from '../../src/userSignature/userSignature.module';
+import { UserSignatureService } from '../../src/userSignature/userSignature.service';
 import { UserSignature } from '../../src/userSignature/models/userSignature.model';
 import * as signatureJson from '../../src/userSignature/signatures/signature.json';
 import { EncryptSignatureService } from '../../src/userSignature/encryptSignature.service';
 
-const mockedSignature = {
-  text: 'signature',
-};
-
-describe('UserSignatureController', () => {
+describe('UserSignatureService', () => {
   let app: INestApplication;
-  let session: string;
+  let userSignatureService: UserSignatureService;
 
-  beforeEach(async () => {
+  beforeAll(async () => {
     const module: TestingModule = await Test.createTestingModule({
       imports: [
         SequelizeModule.forRootAsync({
@@ -29,21 +24,14 @@ describe('UserSignatureController', () => {
         ConfigModule.forRoot({
           load: [databaseConfig],
         }),
-        UserSignatureModule
+        UserSignatureModule,
       ],
     }).compile();
 
+    userSignatureService = module.get<UserSignatureService>(UserSignatureService);
+
     app = module.createNestApplication();
     await app.init();
-  });
-
-  beforeEach(async () => {
-    const signature = new UserSignature();
-    const stringifiedJson = JSON.stringify(signatureJson);
-
-    signature.text = EncryptSignatureService.encrypt(stringifiedJson, 'secret');
-
-    await signature.save();
   });
 
   afterEach(async () => {
@@ -51,24 +39,22 @@ describe('UserSignatureController', () => {
   });
 
   it('should get signature', async () => {
-    const response = await request(app.getHttpServer())
-      .get('/signature');
+    const signature = await userSignatureService.getSignature();
 
-    expect(response.body).toEqual(signatureJson);
+    console.log(signature);
+
+    expect(signature).toEqual(signatureJson);
   });
 
   it('should signIn', async () => {
-    const response1 = await request(app.getHttpServer())
-      .get('/signature');
+    const mockedSignatureValue = 'mockedsignature';
+    const spy = jest.spyOn(EncryptSignatureService, 'encrypt').mockImplementation(() => mockedSignatureValue);
 
-    const response2 = await request(app.getHttpServer())
-      .post('/signature')
-      .send(signatureJson)
-      .set('Set-Cookie', `session-id=${response1.body.text}`);
+    await userSignatureService.getSignature();
+    const signature = await userSignatureService.signIn({text: mockedSignatureValue});
 
-    console.log(response2.body.text);
-    console.log(response1.body.text);
+    expect(signature.getDataValue('text')).toBe(mockedSignatureValue);
 
-    expect(response2.body.text).toEqual(response1.body.text);
+    spy.mockRestore();
   });
 });

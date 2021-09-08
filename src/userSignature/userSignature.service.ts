@@ -39,9 +39,11 @@ export class UserSignatureService {
         const session = new Session();
         session.text = signature1;
         return session.save();
+      } else {
+        throw new Error('Invalid signature');
       }
     } catch (e) {
-      console.log(e);
+      throw new Error('Invalid signature');
     }
   }
 }

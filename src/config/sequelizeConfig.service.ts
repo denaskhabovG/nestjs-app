@@ -1,6 +1,7 @@
 import { Injectable } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
 import { SequelizeModuleOptions, SequelizeOptionsFactory } from '@nestjs/sequelize';
+import { Dialect } from 'sequelize';
 import { IDatabaseConfig } from './configuration';
 import { Todo } from '../todos/models/todo.model';
 import { Session } from '../session/models/session.model';
@@ -13,17 +14,17 @@ export class SequelizeConfigService implements SequelizeOptionsFactory {
 
   createSequelizeOptions(): SequelizeModuleOptions {
     const {
-      pg: { dialect, host, port, username, password, database, logging },
+      pg: { host, port, username, password, database },
     } = this.configService.get<IDatabaseConfig>(EnumConfig.DATABASE);
 
     return {
-      dialect,
+      dialect: <Dialect>process.env.SQL_DIALECT || 'postgres',
+      logging: process.env.SQL_LOGGING === 'true' || true,
       host,
       port,
       username,
       password,
       database,
-      logging,
       models: [Todo, Session, UserSignature],
       autoLoadModels: true,
       synchronize: true,
