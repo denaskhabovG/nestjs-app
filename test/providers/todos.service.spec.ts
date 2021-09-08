@@ -13,7 +13,6 @@ const mockedTodo = {
   done: false,
 };
 
-
 describe('TodoService', () => {
   let app: INestApplication;
   let todoService: TodoService;
