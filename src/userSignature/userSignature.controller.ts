@@ -1,6 +1,6 @@
-import { Body, Controller, Delete, Get, Param, Post } from '@nestjs/common';
+import { Body, Controller, Get, Post } from '@nestjs/common';
 import { UserSignatureService } from './userSignature.service';
-import { SignInDto } from './dto/create-signature.dto';
+import { SignatureDto } from './dto/create-signature.dto';
 
 @Controller('signature')
 export class UserSignatureController {
@@ -12,7 +12,7 @@ export class UserSignatureController {
   }
 
   @Post()
-  signIn(@Body() signature: SignInDto) {
+  signIn(@Body() signature: SignatureDto) {
     return this.userSignatureService.signIn(signature);
   }
 }

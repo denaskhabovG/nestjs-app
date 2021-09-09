@@ -13,17 +13,17 @@ export class SequelizeConfigService implements SequelizeOptionsFactory {
 
   createSequelizeOptions(): SequelizeModuleOptions {
     const {
-      pg: { dialect, host, port, username, password, database, logging },
+      pg: { dialect, logging, host, port, username, password, database },
     } = this.configService.get<IDatabaseConfig>(EnumConfig.DATABASE);
 
     return {
       dialect,
+      logging,
       host,
       port,
       username,
       password,
       database,
-      logging,
       models: [Todo, Session, UserSignature],
       autoLoadModels: true,
       synchronize: true,
