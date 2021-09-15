@@ -5,6 +5,7 @@ import { databaseConfig } from './config/configuration';
 import { SequelizeConfigService } from './config/sequelizeConfig.service';
 import { TodoModule } from './todos/todo.module';
 import { UserSignatureModule } from './userSignature/userSignature.module';
+import { EventsModule } from './socket/socket.module';
 
 @Module({
   imports: [
@@ -16,7 +17,8 @@ import { UserSignatureModule } from './userSignature/userSignature.module';
       load: [databaseConfig],
     }),
     TodoModule,
-    UserSignatureModule
+    UserSignatureModule,
+    EventsModule
   ],
 })
 
