@@ -21,7 +21,7 @@ export class SocketGateway implements  OnGatewayInit{
     clearInterval(interval);
 
     interval = setInterval(() => {
-      server.emit('message', { do: faker.name.findName() });
+      server.emit('message', { username: faker.name.findName() });
     }, 1000);
   }
 
